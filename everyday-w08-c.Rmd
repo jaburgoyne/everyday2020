@@ -19,7 +19,7 @@ which you can find in the Files pane.
 - Load the `tidyverse` and `spotifyr` libraries.
 - Use the `source` command to load `spotify.R`.
 
-```{r setup, include=FALSE}
+```{r setup}
 library(tidyverse)
 library(spotifyr)
 source('spotify.R')
