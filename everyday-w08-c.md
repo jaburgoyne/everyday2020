@@ -1,19 +1,19 @@
 Exploring the Spotify API
 ================
 
-### 1\. Install the necessary packages.
+## 1\. Install the necessary packages.
 
   - For this week, we need to have the `tidyverse` and `spotifyr`
     packages installed.
 
-### 2\. Create a `spotify.R` file to hide your login credentials (optional).
+## 2\. Create a `spotify.R` file to hide your login credentials (optional).
 
   - Download the [sample `spotify.R`](./spotify.R) and save it to your
     project directory.
   - Add `spotify.R` as a new line at the end of your `.gitignore` file,
     which you can find in the Files pane.
 
-### 3\. Set up R.
+## 3\. Set up R.
 
   - Use the RStudio Code menu to insert a new R chunk.
   - Load the `tidyverse` and `spotifyr` libraries.
@@ -41,7 +41,7 @@ library(spotifyr)
 source('spotify.R')
 ```
 
-### 3\. Download and view features for your playlists.
+## 4\. Download and view features for your playlists.
 
   - Collect the most listened tracks for each member in your group, from
     the [Spotify Wrapped](https://open.spotify.com/genre/2019-page)
@@ -69,7 +69,7 @@ spotify_features <-
   unnest(features)
 ```
 
-### 4\. Explore statistical summaries.
+## 5\. Explore statistical summaries.
 
   - Use summarisation and grouping commands to explore the values of the
     Spotify features.
@@ -132,7 +132,7 @@ spotify_features %>%
     ## 3 Studying      Instrumental 0.365
     ## 4 Studying      Intense      0.360
 
-### 5\. Explore with visualisations.
+## 6\. Explore with visualisations.
 
   - We will learn more about visualisations later in the course, but
     here are some templates you can use to start with.
@@ -180,7 +180,7 @@ spotify_features %>%
 
 ![](everyday-w08-c_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
-### 6\. Push to Github.
+## 7\. Push to Github.
 
   - Use the Knit button in RStudio to preview how your page will look.
   - Follow the directions in *Happy Git*, [Sections 16.4
