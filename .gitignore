@@ -26,5 +26,8 @@ vignettes/*.pdf
 *.knit.md
 # R Environment Variables
 .Renviron
+# Other files
 output
 .DS_Store
+rsconnect
+
