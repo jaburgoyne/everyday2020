@@ -5,4 +5,4 @@ This site collect the various tutorials and labs used at the University of Amste
 - [Week 8: Working with Spotify](everyday-w08.html)
 - [Week 10: Using psychTestR](everyday-w10.html)
 - [Week 11: Saving to Google Sheets](everyday-w14-a.html)
-- [Week 11: Making a Dashboard](everyday-w14-a.html)
+- [Week 11: Making a Dashboard](everyday-w14-b.html)
