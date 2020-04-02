@@ -20,20 +20,26 @@ rsconnect::setAccountInfo(name='YOUR_NAME',
               secret='YOUR_SECRET')
 ```
 
-And then load the packages and begin\!
+## Creating an experiment
+
+In order to put our app online, we need to make a new directory in our
+repository with the app name (e.g., `everyday-test`). This directory
+needs to contain all of the code and supplemental information like CSV
+files. The code needs to go in a raw R script named `app.R` – always\! R
+scripts are like one gigantic code chunk, with no Markdown
 
 ``` r
 library(tidyverse)
 ```
 
-    ## ── Attaching packages ──────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
+    ## ── Attaching packages ───────────────────────────────────────────────────────── tidyverse 1.3.0 ──
 
-    ## ✓ ggplot2 3.2.1     ✓ purrr   0.3.3
-    ## ✓ tibble  2.1.3     ✓ dplyr   0.8.4
+    ## ✓ ggplot2 3.3.0     ✓ purrr   0.3.3
+    ## ✓ tibble  3.0.0     ✓ dplyr   0.8.5
     ## ✓ tidyr   1.0.2     ✓ stringr 1.4.0
     ## ✓ readr   1.3.1     ✓ forcats 0.5.0
 
-    ## ── Conflicts ─────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ── Conflicts ──────────────────────────────────────────────────────────── tidyverse_conflicts() ──
     ## x dplyr::filter() masks stats::filter()
     ## x dplyr::lag()    masks stats::lag()
 
@@ -48,8 +54,6 @@ library(psychTestR)
     ## 
     ##     demo, page
 
-## Creating an experiment
-
 We start by loading the agreement prompts. The sliders in `psychTestR`
 don’t allow us to label the scale points, and so it is better to use a
 multiple-choice question instead. We give each choice a name (`MSI1`,
@@ -58,7 +62,7 @@ later. The function inside `pmap` needs to handle every column in our
 CSV file.
 
 ``` r
-msi_agreement_prompts <- read_csv2('app/gold-msi-agreement.csv')
+msi_agreement_prompts <- read_csv2('apps/w10-demo/gold-msi-agreement.csv')
 ```
 
     ## Using ',' as decimal and '.' as grouping mark. Use read_delim() for more control.
@@ -99,7 +103,7 @@ For the non-agreement questions, we want to use the same choice names
 for our scoring function, but we’ll use the labels from the CSV file.
 
 ``` r
-msi_other_prompts <- read_csv2('app/gold-msi-other.csv')
+msi_other_prompts <- read_csv2('apps/w10-demo/gold-msi-other.csv')
 ```
 
     ## Using ',' as decimal and '.' as grouping mark. Use read_delim() for more control.
@@ -187,7 +191,7 @@ Finally, let’s run the app with Shiny\!
 shiny::runApp(my_test)
 ```
 
-Eventually, we will need to make a separate app repository and end with
-a *bare* `make_test()` function, without storing it as a variable. For
-an example, look at the `app` directory at the [course
+When we are happy with the test, we need to end with a *bare*
+`make_test()` function, without storing it as a variable. For an
+example, look at the `apps` directory at the [course
 repository](https://github.com/jaburgoyne/everyday2020).
