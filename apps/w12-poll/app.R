@@ -4,6 +4,33 @@ library(htmltools)
 library(purrr)
 library(tibble)
 
+### COPY THIS CODE TO YOUR OWN APP ###
+
+library(googlesheets4)
+
+## Save function based on Harrison's elt_save_results_to_disk()
+elt_save_results_to_google <- function(email, ssid) {
+    code_block(
+        function(state, opt, ...) {
+            sheets_auth(cache = '.', email = email, use_oob = TRUE)
+            results <-
+                as.data.frame(
+                    get_results(state, complete = TRUE, add_session_info = TRUE)
+                ) %>%
+                psychTestR:::list_cols_to_json()
+            saved_data <- sheets_read(ssid, sheet = 1)
+            if (nrow(saved_data) == 0) {
+                sheets_write(results, ssid, sheet = 1)
+            } else {
+                sheets_append(results, ssid, sheet = 1)
+            }
+        }
+    )
+}
+
+### END CODE TO COPY ###
+
+
 TIME_SLOTS <-
     tribble(
         ~label, ~prompt,
@@ -63,7 +90,10 @@ make_test(
                     )
                 }
             ),
-            elt_save_results_to_disk(complete = TRUE),
+            elt_save_results_to_google(
+                email = 'john.ashley.burgoyne@gmail.com',
+                ssid = '1__2P-D9Uy8SSzJjv-XD6xXVLAfIMQxpRHNm-6mA_zok'
+            ),
             final_page(div(p('Thank you for your response! You may close the window now.')))
         ),
     opt =
@@ -73,5 +103,7 @@ make_test(
             researcher_email = 'j.a.burgoyne@uva.nl',
             theme = 'flatly'
         )
-)
+) -> test
+
+shiny::runApp(test)
 
