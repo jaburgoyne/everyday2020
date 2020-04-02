@@ -103,7 +103,4 @@ make_test(
             researcher_email = 'j.a.burgoyne@uva.nl',
             theme = 'flatly'
         )
-) -> test
-
-shiny::runApp(test)
-
+)

@@ -1,0 +1,71 @@
+---
+title: 'psychTestR and Google Sheets'
+output: github_document
+---
+
+## 1. Install `googlesheets4`
+
+Note that this is different from the `googlesheets` package which is obsolete.
+
+```{r}
+library(googlesheets4)
+```
+
+## 2. Create a Google authentication token.
+
+Open your experiment's `app.R` in RStudio, and under the Session menu, set the working directory to the source file's directory. Then run the following code.
+
+```{r, eval = FALSE}
+sheets_auth(cache = '.')
+```
+
+You will be prompted to log into your Google account. Keep track of which e-mail you used to do it!
+
+## 3. Make sure Git ignores the token.
+
+You don't want to push that token to Git. Under the Git tab in RStudio, right click on the new file that will look something like `2325f32e235e64e8cc_my.name@gmail.com` and choose Ignore.
+
+## 4. Copy following code chunk to your `app.R`.
+
+Place it after your library imports.
+
+```{r, eval = FALSE}
+library(googlesheets4)
+
+## Save function based on Harrison's elt_save_results_to_disk()
+elt_save_results_to_google <- function(email, ssid) {
+    code_block(
+        function(state, opt, ...) {
+            sheets_auth(cache = '.', email = email, use_oob = TRUE)
+            results <-
+                as.data.frame(
+                    get_results(state, complete = TRUE, add_session_info = TRUE)
+                ) %>%
+                psychTestR:::list_cols_to_json()
+            saved_data <- sheets_read(ssid, sheet = 1)
+            if (nrow(saved_data) == 0) {
+                sheets_write(results, ssid, sheet = 1)
+            } else {
+                sheets_append(results, ssid, sheet = 1)
+            }
+        }
+    )
+}
+```
+
+## 5. Replace your elt_save_results_to_disk() call.
+
+Replace your call to `elt_save_results_to_disk(complete = TRUE)` with the following.
+
+```{r, eval = FALSE}
+elt_save_results_to_google(
+    email = 'YOUR_EMAIL'
+    ssid = 'YOUR_RESULTS_SHEET_ID'
+)
+```
+
+What is your Sheet ID? In Google Sheets, if you copy and paste the web address of your spreadsheet, it will look something like this:
+
+> https://docs.google.com/spreadsheets/d/5__2P-13920-efaj235efmvg/edit#gid=0
+
+Everything between `d/` and `/edit` is the Sheet ID. Cut this part of the URL out, and put it in your `elt_save_results_to_google()` function.
