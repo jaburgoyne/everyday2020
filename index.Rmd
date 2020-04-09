@@ -1,0 +1,148 @@
+---
+title: 'The Data Science of Everyday Listening'
+author: 'John Ashley Burgoyne'
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    theme: journal
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(ggcorrplot)
+library(ggdendro)
+library(flexdashboard)
+library(plotly)
+library(knitr)
+library(DT)
+```
+
+```{r poll_data}
+poll_wide <- 
+    read_csv('poll.csv') %>% 
+    select(
+        name = results.name,
+        '10am' = results.10am,
+        'noon' = results.noon,
+        '2pm' = results.2pm,
+        '4pm' = results.4pm,
+        '6pm' = results.6pm
+    )
+poll_long <-
+    poll_wide %>% 
+    pivot_longer('10am':'6pm', names_to = 'time_slot', values_to = 'preference')
+```
+
+
+Sidebar {.sidebar}
+==================
+
+This dashboard illustrates the results of our class poll on the best online meeting times. Students ranked their prefences on a scale of 0 (least preferred) to 2 (most preferred). On average, students prefer a 4pm time slot slightly over the original 6pm slot; earlier time slots were noticeably less preferred.
+
+```{r}
+poll_long %>% 
+    group_by(time_slot) %>% 
+    summarise(
+        M = mean(preference),
+        SE = sd(preference) / sqrt(n())
+    ) %>%
+    arrange(desc(M)) %>% 
+    mutate(M = round(M, 1), SE = round(SE, 1)) %>% 
+    rename('Time Slot' = time_slot) %>% 
+    kable()
+```
+
+I've chosen to make this sidebar *global* (i.e., visible from all pages), but you could also choose to have sidebars only for pages with visualisations or even no sidebar at all. A global sidebar would be a good place to put an abstract with your research question and key results, and a short description of how the portfolio works.
+
+Be warned that the top of the sidebar (as well as navigation tabs for the chart panes) will disappear if you have too many pages. It may be wise to use menus, as described in the `flexdashboard` documentation.
+
+
+Survey Results
+==============
+
+Column {data-width=650}
+-----------------------
+
+### Time Preferences for Everyday Listening Lectures  {data-height=650}
+
+```{r}
+poll_long %>% 
+    mutate(
+        time_slot = 
+            fct_relevel(
+                time_slot, 
+                '10am', 'noon', '2pm', '4pm', '6pm'
+            ),
+        preference = factor(preference)
+    ) %>% 
+    ggplot(aes(x = time_slot, fill = preference)) +
+    geom_bar(position = 'dodge') +
+    scale_x_discrete(name = 'Time Slot') +
+    scale_y_continuous(name = 'Count', limits = c(0, 15)) +
+    scale_fill_viridis_d(name = NULL) +
+    theme_minimal() +
+    theme(panel.grid.major.x = element_blank()) 
+ggplotly()
+```
+
+### Raw Survey Data {data-height=350}
+
+```{r}
+poll_wide %>% 
+    rename(Student = name) %>% 
+    datatable(
+        rownames = FALSE, 
+        options = list(paging = FALSE, searching = FALSE)
+    )
+```
+
+Column {data-width=350}
+-----------------------
+
+### Time-Slot Inter-correlations {data-height=350}
+
+```{r, fig.width = 3.5, fig.height = 3.5}
+poll_wide %>% 
+    select(-name) %>% 
+    cor() %>% 
+    ggcorrplot(
+        #lab = TRUE,
+        method = 'circle',
+        digits = 1,
+        ggtheme = theme_minimal()
+    )
+```
+
+### Clusters of Student Preferences {data-height=650}
+
+```{r, fig.width = 3, fig.height = 5}
+poll_wide %>% 
+    column_to_rownames('name') %>% 
+    dist() %>% 
+    hclust() %>% 
+    ggdendrogram(rotate = TRUE)
+```
+
+
+
+
+Background
+==========
+
+Column
+------
+
+### Introduction
+### Method
+### Discussion
+
+Column {.tabset}
+----------------
+
+### Burgoyne 1999
+
+These tabs might have a selection of relevant article reviews from group members.
+
+### Smith 2013
+### Li 2020
